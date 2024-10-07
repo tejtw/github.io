@@ -16,7 +16,8 @@ os.environ['mdate'] = "20170601 20230702" ==> 欲抓取資料之日期區間，�
 os.environ['ticker'] = '2330 2337' ==> 所欲抓取股票之代碼。
 ```
 
-```
+
+```python
 import os 
 os.environ['TEJAPI_BASE'] = "https://api.tej.com.tw"
 os.environ['TEJAPI_KEY'] = "your key"
@@ -24,6 +25,13 @@ os.environ['mdate'] = "20170601 20230702"
 os.environ['ticker'] = '2330 IR0001'
 !zipline ingest -b tquant
 ```
+
+    Merging daily equity files:
+    
+
+    [2023-08-09 05:09:50.565678] INFO: zipline.data.bundles.core: Ingesting tquant.
+    
+
 ## Initialize 函式
 
 `initialize` 為構建 zipline 交易策略的重要函式，會在回測開始前被呼叫一次，主要任務為設定回測環境，常見用於設定滑價或手續費。分別可以使用:
@@ -51,7 +59,8 @@ def initialize(context):
     set_commission(commission.PerShare(cost=0.00285))
 ```
 
-```
+
+```python
 from zipline.api import set_slippage, set_commission
 from zipline.finance import slippage, commission
 
@@ -137,7 +146,8 @@ def handle_data(context, data):
     )
 ```
 
-```
+
+```python
 from zipline.api import order, record, symbol
 
 def handle_data(context, data):
@@ -157,7 +167,8 @@ def handle_data(context, data):
 
 `analyze` 主要用於回測後視覺化策略績效與風險，這裡我們以 `matplotlib` 繪製投組價值表與台積電股價走勢表。其中 `analyze` 有兩個參數 __context__ 與 __perf__，__context__ 就與上述相同，__perf__ 就是最終 `run_algorithm` 輸出的資料表 -- __results__。我們可以提取裡面特定欄位來繪製圖表。
 
-```
+
+```python
 import matplotlib.pyplot as plt
 def analyze(context, perf):
     ax1 = plt.subplot(211)
@@ -167,6 +178,7 @@ def analyze(context, perf):
     plt.gcf().set_size_inches(18, 8)
     plt.show()
 ```
+
 ## Run_algorithm 函式
 
 ### zipline.run_algorithm
@@ -361,7 +373,8 @@ def analyze(context, perf):
   - 具體來說，empyrical套件的計算方式為：
     <br>Cov(`benchmark_return` Series, `returns` Series) / Var(`benchmark_return` Series)
 
-```
+
+```python
 from zipline import run_algorithm
 import pandas as pd 
 
@@ -378,15 +391,442 @@ results = run_algorithm(start= start_date,
                        bundle='tquant'
                        )
 ```
-![alt text](image-37.png)
 
-```
+
+    
+![png](output_10_0.png)
+    
+
+
+
+```python
 results
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>period_open</th>
+      <th>period_close</th>
+      <th>short_value</th>
+      <th>long_exposure</th>
+      <th>benchmark_return</th>
+      <th>treasury_return</th>
+      <th>pnl</th>
+      <th>short_exposure</th>
+      <th>capital_used</th>
+      <th>returns</th>
+      <th>...</th>
+      <th>treasury_period_return</th>
+      <th>algorithm_period_return</th>
+      <th>alpha</th>
+      <th>beta</th>
+      <th>sharpe</th>
+      <th>sortino</th>
+      <th>max_drawdown</th>
+      <th>max_leverage</th>
+      <th>trading_days</th>
+      <th>period_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-02 13:30:00+08:00</th>
+      <td>2019-01-02 09:01:00+08:00</td>
+      <td>2019-01-02 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>None</td>
+      <td>None</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1</td>
+      <td>2019-01</td>
+    </tr>
+    <tr>
+      <th>2019-01-03 13:30:00+08:00</th>
+      <td>2019-01-03 09:01:00+08:00</td>
+      <td>2019-01-03 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>215500.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-2.85</td>
+      <td>0.0</td>
+      <td>-215502.85</td>
+      <td>-0.000003</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>-0.000003</td>
+      <td>None</td>
+      <td>None</td>
+      <td>-11.224972</td>
+      <td>-11.224972</td>
+      <td>-0.000003</td>
+      <td>0.215501</td>
+      <td>2</td>
+      <td>2019-01</td>
+    </tr>
+    <tr>
+      <th>2019-01-04 13:30:00+08:00</th>
+      <td>2019-01-04 09:01:00+08:00</td>
+      <td>2019-01-04 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>208000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-7500.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>-0.007500</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>-0.007503</td>
+      <td>None</td>
+      <td>None</td>
+      <td>-9.170376</td>
+      <td>-9.168633</td>
+      <td>-0.007503</td>
+      <td>0.215501</td>
+      <td>3</td>
+      <td>2019-01</td>
+    </tr>
+    <tr>
+      <th>2019-01-07 13:30:00+08:00</th>
+      <td>2019-01-07 09:01:00+08:00</td>
+      <td>2019-01-07 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>213000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>5000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.005038</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>-0.002503</td>
+      <td>None</td>
+      <td>None</td>
+      <td>-1.893153</td>
+      <td>-2.608781</td>
+      <td>-0.007503</td>
+      <td>0.215501</td>
+      <td>4</td>
+      <td>2019-01</td>
+    </tr>
+    <tr>
+      <th>2019-01-08 13:30:00+08:00</th>
+      <td>2019-01-08 09:01:00+08:00</td>
+      <td>2019-01-08 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>211000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-2000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>-0.002005</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>-0.004503</td>
+      <td>None</td>
+      <td>None</td>
+      <td>-3.141155</td>
+      <td>-4.087705</td>
+      <td>-0.007503</td>
+      <td>0.215501</td>
+      <td>5</td>
+      <td>2019-01</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2023-05-22 13:30:00+08:00</th>
+      <td>2023-05-22 09:01:00+08:00</td>
+      <td>2023-05-22 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>531000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-1000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>-0.000734</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.362247</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.816172</td>
+      <td>1.250657</td>
+      <td>-0.202433</td>
+      <td>0.455182</td>
+      <td>1063</td>
+      <td>2023-05</td>
+    </tr>
+    <tr>
+      <th>2023-05-23 13:30:00+08:00</th>
+      <td>2023-05-23 09:01:00+08:00</td>
+      <td>2023-05-23 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>530000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-1000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>-0.000734</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.361247</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.813954</td>
+      <td>1.247253</td>
+      <td>-0.202433</td>
+      <td>0.455182</td>
+      <td>1064</td>
+      <td>2023-05</td>
+    </tr>
+    <tr>
+      <th>2023-05-24 13:30:00+08:00</th>
+      <td>2023-05-24 09:01:00+08:00</td>
+      <td>2023-05-24 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>525000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-5000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>-0.003673</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.356247</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.804283</td>
+      <td>1.232180</td>
+      <td>-0.202433</td>
+      <td>0.455182</td>
+      <td>1065</td>
+      <td>2023-05</td>
+    </tr>
+    <tr>
+      <th>2023-05-25 13:30:00+08:00</th>
+      <td>2023-05-25 09:01:00+08:00</td>
+      <td>2023-05-25 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>543000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>18000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.013272</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.374247</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.835019</td>
+      <td>1.282067</td>
+      <td>-0.202433</td>
+      <td>0.455182</td>
+      <td>1066</td>
+      <td>2023-05</td>
+    </tr>
+    <tr>
+      <th>2023-05-26 13:30:00+08:00</th>
+      <td>2023-05-26 09:01:00+08:00</td>
+      <td>2023-05-26 13:30:00+08:00</td>
+      <td>0.0</td>
+      <td>566000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>23000.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.016736</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.397247</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.873009</td>
+      <td>1.345075</td>
+      <td>-0.202433</td>
+      <td>0.455182</td>
+      <td>1067</td>
+      <td>2023-05</td>
+    </tr>
+  </tbody>
+</table>
+<p>1067 rows × 42 columns</p>
+</div>
+
+
+
 我們可以發現之前使用 `order` 紀錄的 trade_days, has_ordered 與 TSMC 確實以欄位型式記錄在 __results__ 表中。 
 
-```
+
+```python
 results[['trade_days','has_ordered','TSMC']]
 ```
-![alt text](image-38.png)
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>trade_days</th>
+      <th>has_ordered</th>
+      <th>TSMC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-02 13:30:00+08:00</th>
+      <td>1</td>
+      <td>True</td>
+      <td>219.5</td>
+    </tr>
+    <tr>
+      <th>2019-01-03 13:30:00+08:00</th>
+      <td>2</td>
+      <td>True</td>
+      <td>215.5</td>
+    </tr>
+    <tr>
+      <th>2019-01-04 13:30:00+08:00</th>
+      <td>3</td>
+      <td>True</td>
+      <td>208.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-07 13:30:00+08:00</th>
+      <td>4</td>
+      <td>True</td>
+      <td>213.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-08 13:30:00+08:00</th>
+      <td>5</td>
+      <td>True</td>
+      <td>211.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2023-05-22 13:30:00+08:00</th>
+      <td>1063</td>
+      <td>True</td>
+      <td>531.0</td>
+    </tr>
+    <tr>
+      <th>2023-05-23 13:30:00+08:00</th>
+      <td>1064</td>
+      <td>True</td>
+      <td>530.0</td>
+    </tr>
+    <tr>
+      <th>2023-05-24 13:30:00+08:00</th>
+      <td>1065</td>
+      <td>True</td>
+      <td>525.0</td>
+    </tr>
+    <tr>
+      <th>2023-05-25 13:30:00+08:00</th>
+      <td>1066</td>
+      <td>True</td>
+      <td>543.0</td>
+    </tr>
+    <tr>
+      <th>2023-05-26 13:30:00+08:00</th>
+      <td>1067</td>
+      <td>True</td>
+      <td>566.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>1067 rows × 3 columns</p>
+</div>
+
+
+
+
+```python
+
+```

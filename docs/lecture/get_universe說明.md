@@ -1,6 +1,9 @@
 # get_universe說明
+
 ## Import and Setting
-```
+
+
+```python
 import pandas as pd
 import datetime
 import tejapi
@@ -22,6 +25,7 @@ log_handler = StderrHandler(format_string='[{record.time:%Y-%m-%d %H:%M:%S.%f}]:
 log_handler.push_application()
 log = Logger('get_universe')
 ```
+
 ## get_universe
 用來取得某一段時間中符合特定條件的股票池（<font color=DeepPink>使用此函數會消耗API流量</font>）。
 
@@ -310,7 +314,7 @@ log = Logger('get_universe')
     </pre>
     </details>
 
-       
+   
 ### Returns
 ---
 List of symbols.
@@ -344,7 +348,7 @@ List of symbols.
     - M3000 Securities
     - OTC28 OTC Banking
 
-    <span id="mktandmkt_bd"></span>
+<span id="mktandmkt_bd"></span>
 ## 市場別（mkt） 與板塊別（mkt_bd_c、mkt_bd_e）
 ---
 以 **'普通股'** 為例（不含F股或KY股）：
@@ -354,12 +358,15 @@ List of symbols.
   - 在**櫃買中心掛牌的普通股**：包含**上櫃一般板（mkt_bd_e='OTC'、mkt_bd_c='上櫃一般版'）**，不含興櫃。
 
 - 統整上述關係：
-> ![get_universe.png](attachment:get_universe.png)
+> ![get_universe.png](get_universe.png)
 
 ## Import get_universe
-```
+
+
+```python
 from zipline.sources.TEJ_Api_Data import get_universe
 ```
+
 <span id="menu"></span>
 ## Examples
 
@@ -381,29 +388,100 @@ from zipline.sources.TEJ_Api_Data import get_universe
 
 [Return to Examples Menu](#menu)
 
-```
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, mkt_bd_e=['TSE','OTC'])[0:10]
 ```
-![alt text](image-15.png)
+
+    [2024-03-13 02:34:41.475876]: INFO: get_universe_TW: Filters：{'mkt_bd_e': ['TSE', 'OTC']}
+    
+
+    Currently used TEJ API key call quota 37/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 110039/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['0050',
+     '0051',
+     '0052',
+     '0053',
+     '0055',
+     '0056',
+     '0057',
+     '0061',
+     '006201',
+     '006203']
+
+
 
 <span id="case2"></span>
 ### case2 取曾經在證券交易所／櫃買中心掛牌的證券（不限於普通股）
 [Return to Examples Menu](#menu)
 
 #### 取曾經在證券交易所掛牌的證券
-```
+
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, mkt=['TWSE'])[0:10]
 ```
-![alt text](image-16.png)
+
+    [2024-03-13 02:34:54.167604]: INFO: get_universe_TW: Filters：{'mkt': ['TWSE']}
+    
+
+    Currently used TEJ API key call quota 38/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 565251/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['0050',
+     '0051',
+     '0052',
+     '0053',
+     '0055',
+     '0056',
+     '0057',
+     '0061',
+     '006203',
+     '006204']
+
+
 
 #### 取曾經在櫃買中心掛牌的證券
-```
+
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, mkt=['OTC'])[0:10]
 ```
-![alt text](image-17.png)
+
+    [2024-03-13 02:35:25.138684]: INFO: get_universe_TW: Filters：{'mkt': ['OTC']}
+    
+
+    Currently used TEJ API key call quota 39/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 837204/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['006201',
+     '00679B',
+     '00687B',
+     '00694B',
+     '00695B',
+     '00696B',
+     '00697B',
+     '00718B',
+     '00719B',
+     '00720B']
+
+
 
 <span id="case3"></span>
 ### case3 取曾經上市+上櫃的普通股（不含F股或KY股）
@@ -422,75 +500,251 @@ get_universe(start, end, mkt=['OTC'])[0:10]
 
 [Return to Examples Menu](#menu)
 
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, mkt=['TWSE','OTC'], stktp_c=['普通股'])[0:10]
-
-![alt text](image-18.png)
-
 ```
+
+    [2024-03-13 02:35:34.084292]: INFO: get_universe_TW: Filters：{'mkt': ['TWSE', 'OTC'], 'stktp_c': ['普通股']}
+    
+
+    Currently used TEJ API key call quota 40/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1021182/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['1101',
+     '1102',
+     '1103',
+     '1104',
+     '1108',
+     '1109',
+     '1110',
+     '1201',
+     '1203',
+     '1210']
+
+
+
+
+```python
 get_universe(start, end, mkt_bd_e=['TSE','OTC','TIB'], mkt=['TWSE','OTC'], stktp_c=['普通股'])[0:10]
 ```
-![alt text](image-19.png)
+
+    [2024-03-13 02:35:47.903112]: INFO: get_universe_TW: Filters：{'mkt_bd_e': ['TSE', 'OTC', 'TIB'], 'mkt': ['TWSE', 'OTC'], 'stktp_c': ['普通股']}
+    
+
+    Currently used TEJ API key call quota 41/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1342349/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['1101',
+     '1102',
+     '1103',
+     '1104',
+     '1108',
+     '1109',
+     '1110',
+     '1201',
+     '1203',
+     '1210']
+
+
 
 <span id="case4"></span>
 ### case4 取子產業別曾經為"M2324 半導體業"的證券
 [Return to Examples Menu](#menu)
 
-```
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, sub_ind_c=['M2324 半導體業'])[0:10]
 ```
-![alt text](image-20.png)
+
+    [2024-03-13 02:35:56.933903]: INFO: get_universe_TW: Filters：{'sub_ind_c': ['M2324 半導體業']}
+    
+
+    Currently used TEJ API key call quota 42/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1663516/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['2302',
+     '2303',
+     '2329',
+     '2330',
+     '2337',
+     '2338',
+     '2342',
+     '2344',
+     '2351',
+     '2363']
+
+
 
 <span id="case5"></span>
           
 ### case5 取子產業別曾經為"M2324 Semiconductor"&"M2325 Computer and Peripheral Equipment"的證券
 [Return to Examples Menu](#menu)
 
-```
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, sub_ind_e=['M2324 Semiconductor',
                                     'M2325 Computer and Peripheral Equipment'])[0:10]
 ```
-![alt text](image-21.png)
+
+    [2024-03-13 02:36:01.704376]: INFO: get_universe_TW: Filters：{'sub_ind_e': ['M2324 Semiconductor', 'M2325 Computer and Peripheral Equipment']}
+    
+
+    Currently used TEJ API key call quota 43/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1679021/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['2301',
+     '2302',
+     '2303',
+     '2305',
+     '2324',
+     '2329',
+     '2330',
+     '2331',
+     '2337',
+     '2338']
+
+
 
 <span id="case6"></span>
 ### case6 取證券種類為"ETF"及"普通股"（不含F股或KY股）且掛牌於證券交易所的證券
 [Return to Examples Menu](#menu)
 
-```
-# 僅顯示前10筆a
+
+```python
+# 僅顯示前10筆
 get_universe(start, end, stktp_c=['ETF', '普通股'], mkt=['TWSE'])[0:10]
 ```
-![alt text](image-22.png)
+
+    [2024-03-13 02:36:09.262084]: INFO: get_universe_TW: Filters：{'stktp_c': ['ETF', '普通股'], 'mkt': ['TWSE']}
+    
+
+    Currently used TEJ API key call quota 44/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1705929/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['0050',
+     '0051',
+     '0052',
+     '0053',
+     '0055',
+     '0056',
+     '0057',
+     '006203',
+     '006204',
+     '006208']
+
+
 
 <span id="case7"></span>
 ### case7 取曾經為"IX0002"（台灣50指數）成份股的證券
 [Return to Examples Menu](#menu)
 
-```
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, idx_id='IX0002')[0:10]
 ```
-![alt text](image-23.png)
+
+    [2024-03-13 02:36:14.450108]: INFO: get_universe_TW: Filters：{'idx_id': ['IX0002']}
+    
+
+    Currently used TEJ API key call quota 45/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1885914/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['1101',
+     '1216',
+     '1301',
+     '1303',
+     '1326',
+     '1402',
+     '1590',
+     '1605',
+     '2002',
+     '2207']
+
+
 
 <span id="case8"></span>
 ### case8 取主產業別曾經為"M1100 水泥工業"且為"IX0006"（台灣高股息指數）成份股的證券
 [Return to Examples Menu](#menu)
 
-```
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, main_ind_c='M1100 水泥工業', idx_id='IX0006')[0:10]
 ```
-![alt text](image-24.png)
+
+    [2024-03-13 02:36:17.542984]: INFO: get_universe_TW: Filters：{'main_ind_c': 'M1100 水泥工業', 'idx_id': ['IX0006']}
+    
+
+    Currently used TEJ API key call quota 45/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1885914/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['1102']
+
+
 
 <span id="case9"></span>
 ### case9 取非金融業的普通股（不含F股或KY股）
 [Return to Examples Menu](#menu)
 
-```
+
+```python
 # 僅顯示前10筆
 get_universe(start, end, main_ind_c=['一般產業']
              , stktp_c='普通股')[0:10]
 ```
-![alt text](image-25.png)
+
+    [2024-03-13 02:36:23.861031]: INFO: get_universe_TW: Filters：{'main_ind_c': ['一般產業'], 'stktp_c': '普通股'}
+    
+
+    Currently used TEJ API key call quota 48/9223372036854775807 (0.0%)
+    Currently used TEJ API key data quota 1887612/9223372036854775807 (0.0%)
+    
+
+
+
+
+    ['1101',
+     '1102',
+     '1103',
+     '1104',
+     '1108',
+     '1109',
+     '1110',
+     '1201',
+     '1203',
+     '1210']
+
+

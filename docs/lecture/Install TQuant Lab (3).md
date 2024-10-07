@@ -223,7 +223,6 @@ $ docker logs --tail 3 <CONTAINER_ID>
 
 * [zipline-tej當前版本](https://pypi.org/project/zipline-tej/)
 
-
 ## 其他資訊
 
 * [TQuant Lab 官方網站](https://tquant.tejwin.com/)
